@@ -1,6 +1,6 @@
 # ApexSplits
 
-ApexSplits is a high-precision race analysis tool designed for **CMU Buggy Raceday**. It allows analysts to capture frame-accurate split times from YouTube videos or local footage and sync them directly to a master Google Spreadsheet.
+ApexSplits is a high-precision race analysis tool designed for **CMU Buggy Raceday**. It allows analysts to capture frame-accurate split times from YouTube videos or local footage and sync them directly to a [master Google Spreadsheet](https://docs.google.com/spreadsheets/d/1ZwbNW2unU0GlvwuwtAtP5opqv3p6Ir22Sn53OrCnTLE/edit?usp=sharing).
 
 ![Apex Logo](/public/apex.svg)
 
