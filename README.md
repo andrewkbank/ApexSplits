@@ -62,12 +62,14 @@ npm run electron:dev
 2. **Metadata**: Select the Year, Category (Men/Women), and Stage (Prelim/Final).
 3. **Mark Beep**: Click "Mark" when the starting buzzer sounds.
 4. **Mark Splits**: Play the video and click "Mark" for each team as they cross the transition lines.
-    - **Keys 1, 2, 3**: Quick-mark for Team A, B, or C.
+    - **Arrows**: Skip by 1 second.
     - **Shift + Arrows**: Frame-by-frame seeking.
     - **Space**: Play/Pause.
 5. **Save**: Click "Save to Google Sheets" to upload the results.
 
 ## Configuration
+
+The first time you click "Save to Google Sheets," you will be prompted to authenticate using your Google account. After the first time, the "Save to Google Sheets" button will act instantly.
 
 The master Spreadsheet ID is currently hardcoded in `electron/google-sheets-handler.ts`. Change `SPREADSHEET_ID` to your own spreadsheet if you wish to use a different destination.
 
