@@ -34,6 +34,9 @@ ApexSplits is a high-precision race analysis tool designed for **CMU Buggy Raced
    ```
 
 3. **Google Sheets Setup (Required for Saving)**:
+   - Easy method (If you are on Apex)
+     - When requesting access to the master sheets, also ask for access to the official `google-credentials.json` file.
+     - Download the JSON, and place it in the root directory.
    - **Step A: App Credentials**: 
      - Go to the [Google Cloud Console](https://console.cloud.google.com/).
      - Create a project and enable the **Google Sheets API**.
