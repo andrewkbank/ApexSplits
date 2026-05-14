@@ -34,12 +34,15 @@ ApexSplits is a high-precision race analysis tool designed for **CMU Buggy Raced
    ```
 
 3. **Google Sheets Setup (Required for Saving)**:
-   - Go to the [Google Cloud Console](https://console.cloud.google.com/).
-   - Create a new project.
-   - Enable the **Google Sheets API**.
-   - Configure the **OAuth Consent Screen** (Internal or External).
-   - Create **OAuth 2.0 Client ID** credentials (Desktop App).
-   - Download the JSON file, rename it to `google-credentials.json`, and place it in the **root directory** of this project.
+   - **Step A: App Credentials**: 
+     - Go to the [Google Cloud Console](https://console.cloud.google.com/).
+     - Create a project and enable the **Google Sheets API**.
+     - Create **OAuth 2.0 Client ID** credentials (Desktop App).
+     - Download the JSON, rename to `google-credentials.json`, and place it in the root directory.
+   - **Step B: Spreadsheet Access**:
+     - The app is hardcoded to save to the [Apex Master Sheet](https://docs.google.com/spreadsheets/d/1ZwbNW2unU0GlvwuwtAtP5opqv3p6Ir22Sn53OrCnTLE/edit).
+     - **Crucial**: You must request "Editor" access to this specific sheet from the Apex administrator (`cmu.apex@gmail.com`). 
+     - Your Google account must have permission to edit the sheet for the app's save function to work.
 
 ## Development
 
