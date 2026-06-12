@@ -9,7 +9,7 @@ export interface IElectronAPI {
   scrapeRaceday: (year: string) => Promise<any>
   saveToSheets: (data: any) => Promise<void>
   openFile: () => Promise<string | undefined>
-  exportVideo: (videoPath: string, splits: any, teams: string[]) => Promise<string>
+  exportVideo: (data: { videoPath: string, splits: any, teams: any[], startBeepTime: number }) => Promise<string>
   generateDescription: (data: any) => Promise<string>
 }
 

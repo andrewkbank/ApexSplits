@@ -34,3 +34,6 @@ token.json
 # OS
 .DS_Store
 Thumbs.db
+
+# Testing Scripts
+test.js

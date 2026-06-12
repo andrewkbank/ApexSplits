@@ -26,6 +26,6 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
   scrapeRaceday: (year: string) => ipcRenderer.invoke('scrape-raceday', year),
   saveToSheets: (data: any) => ipcRenderer.invoke('save-to-sheets', data),
   openFile: () => ipcRenderer.invoke('open-file'),
-  exportVideo: (videoPath: string, splits: any, teams: string[]) => ipcRenderer.invoke('export-video', videoPath, splits, teams),
+  exportVideo: (data: any) => ipcRenderer.invoke('export-video', data),
   generateDescription: (data: any) => ipcRenderer.invoke('generate-description', data),
 })

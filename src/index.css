@@ -1110,3 +1110,130 @@ input[type="text"]:focus {
   background: rgba(255, 255, 255, 0.05);
   color: var(--accent-color);
 }
+
+/* Overlay View */
+.overlay-view {
+  animation: fadeIn 0.3s ease-out;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.overlay-header h2 {
+  color: var(--accent-color);
+  margin-bottom: 8px;
+}
+
+.overlay-header p {
+  color: var(--text-secondary);
+}
+
+.overlay-summary {
+  flex: 1;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.team-summary-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.team-summary-card h4 {
+  color: var(--accent-color);
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 8px;
+}
+
+.segment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.segment-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.seg-name {
+  color: var(--text-secondary);
+}
+
+.seg-val {
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.seg-diff {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-align: right;
+  color: #94a3b8;
+}
+
+.seg-diff.leader {
+  color: #34d399;
+}
+
+.overlay-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-top: 1px solid var(--border-color);
+  padding-top: 24px;
+}
+
+.export-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.info-item {
+  display: flex;
+  gap: 12px;
+  font-size: 0.9rem;
+}
+
+.info-item .label {
+  color: var(--text-secondary);
+}
+
+.info-item .value {
+  font-weight: 600;
+  color: var(--accent-color);
+}
+
+.btn-export-video {
+  background: linear-gradient(135deg, var(--accent-color), #880000);
+  color: white;
+  border: none;
+  padding: 16px 32px;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 15px rgba(255, 0, 0, 0.3);
+}
+
+.btn-export-video:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 0, 0, 0.4);
+}
+
+.btn-export-video:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(1);
+}

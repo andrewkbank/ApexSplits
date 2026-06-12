@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Layout, Play, History, Download, Settings, BarChart3, Plus, Trash2, CheckCircle2, AlertCircle, Copy, ExternalLink, HelpCircle, Info } from 'lucide-react'
+import { Layout, Play, History, Download, Settings, BarChart3, Plus, Trash2, CheckCircle2, AlertCircle, Copy, ExternalLink, HelpCircle, Info, Video } from 'lucide-react'
 import { VideoPlayer } from './components/VideoPlayer'
 
 const SPLIT_NAMES = ['Hill 1', 'Hill 2', 'FR 1', 'FR 2', 'Hill 3', 'Hill 4', 'Hill 5']
@@ -171,6 +171,55 @@ function App() {
     }
   }
 
+  const handleExportVideo = async () => {
+    if (!videoSrc || startBeepTime === null) {
+      setNotification({ message: 'Load a video and mark the start beep first!', type: 'error' })
+      return
+    }
+
+    setLoading(true)
+    try {
+      const data = {
+        videoPath: videoSrc.replace('local-video://', ''),
+        splits,
+        teams: selectedTeams.map((t, i) => {
+          const currentCategory = category.toLowerCase().includes('men') ? 'mens' : 
+                                 category.toLowerCase().includes('women') ? 'womens' : 'allgender'
+          const result = scrapedData?.[currentCategory]?.find((r: any) => r.team === t && r.letter === selectedLetters[i])
+          
+          let officialTime = ''
+          if (result) {
+            if (isReroll) {
+              officialTime = (stage === 'Prelim' ? result.prelimRerollTime : result.finalRerollTime) || ''
+            } else {
+              officialTime = (stage === 'Prelim' ? result.prelimTime : result.finalTime) || ''
+            }
+          }
+
+          return { 
+            name: t, 
+            letter: selectedLetters[i],
+            buggy: result?.buggy || '',
+            officialTime
+          }
+        }),
+        startBeepTime,
+        year,
+        category,
+        stage,
+        isReroll
+      }
+      
+      const outputPath = await window.ipcRenderer.exportVideo(data)
+      setNotification({ message: `Video generated: ${outputPath}`, type: 'success' })
+    } catch (err: any) {
+      console.error('Export error:', err)
+      setNotification({ message: `Export failed: ${err.message}`, type: 'error' })
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const handleMarkCurrent = (time: number) => {
     // Logic to mark the NEXT empty split for the "active" team
     // For simplicity, let's just mark the first empty split for Team A
@@ -195,6 +244,9 @@ function App() {
           </button>
           <button className={`nav-item ${activeTab === 'instructions' ? 'active' : ''}`} onClick={() => setActiveTab('instructions')}>
             <HelpCircle size={20} /><span>Instructions</span>
+          </button>
+          <button className={`nav-item ${activeTab === 'overlay' ? 'active' : ''}`} onClick={() => setActiveTab('overlay')}>
+            <Video size={20} /><span>Splits Overlay</span>
           </button>
         </div>
       </nav>
@@ -558,6 +610,83 @@ function App() {
               ) : (
                 <div className="loading-state">Loading historical records...</div>
               )}
+            </div>
+          )}
+
+          {activeTab === 'overlay' && (
+            <div className="overlay-view card">
+              <div className="overlay-header">
+                <h2>Splits Overlay Export</h2>
+                <p>Preview the segments and generate a video with timing overlays.</p>
+              </div>
+
+              <div className="overlay-summary">
+                <div className="summary-grid">
+                  {[0, 1, 2].map(tIdx => {
+                    const teamName = selectedTeams[tIdx]
+                    if (!teamName) return null
+
+                    return (
+                      <div key={tIdx} className="team-summary-card">
+                        <h4>{teamName} {selectedLetters[tIdx]}</h4>
+                        <div className="segment-list">
+                          {SPLIT_NAMES.map((sName, sIdx) => {
+                            const time = splits[tIdx][sIdx]
+                            if (typeof time !== 'number') return null
+
+                            const prevTime = sIdx === 0 ? startBeepTime : splits[tIdx][sIdx - 1]
+                            if (typeof prevTime !== 'number') return null
+
+                            const segment = time - prevTime
+                            
+                            // Calculate leader for this split
+                            let minSegment = segment
+                            for (let i = 0; i < 3; i++) {
+                              const tTime = splits[i][sIdx]
+                              const tPrev = sIdx === 0 ? startBeepTime : splits[i][sIdx - 1]
+                              if (typeof tTime === 'number' && typeof tPrev === 'number') {
+                                const tSeg = tTime - tPrev
+                                if (tSeg < minSegment) minSegment = tSeg
+                              }
+                            }
+                            const diff = segment - minSegment
+
+                            return (
+                              <div key={sIdx} className="segment-row">
+                                <span className="seg-name">{sName}</span>
+                                <span className="seg-val">{segment.toFixed(2)}s</span>
+                                <span className={`seg-diff ${diff === 0 ? 'leader' : ''}`}>
+                                  {diff === 0 ? 'Leader' : `+${diff.toFixed(2)}s`}
+                                </span>
+                              </div>
+                            )
+                          })}
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+
+              <div className="overlay-actions">
+                <div className="export-info">
+                  <div className="info-item">
+                    <span className="label">Start Time (Beep):</span>
+                    <span className="value">{startBeepTime?.toFixed(3) || 'Not set'}s</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="label">Source Video:</span>
+                    <span className="value">{videoTitle || 'None'}</span>
+                  </div>
+                </div>
+                <button 
+                  className="btn-export-video" 
+                  onClick={handleExportVideo} 
+                  disabled={loading || !videoSrc || startBeepTime === null}
+                >
+                  {loading ? 'Generating Video...' : 'Generate Overlay Video'}
+                </button>
+              </div>
             </div>
           )}
 

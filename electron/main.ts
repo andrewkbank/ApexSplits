@@ -145,8 +145,8 @@ app.whenReady().then(() => {
     if (!canceled) return filePaths[0]
   })
 
-  ipcMain.handle('export-video', async (_, videoPath, splits, teams) => {
-    return await generateSplitOverlay(videoPath, splits, teams)
+  ipcMain.handle('export-video', async (_, data) => {
+    return await generateSplitOverlay(data)
   })
 
   ipcMain.handle('generate-description', async (_, data) => {
