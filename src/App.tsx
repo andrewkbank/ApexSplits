@@ -628,28 +628,44 @@ function App() {
 
                     return (
                       <div key={tIdx} className="team-summary-card">
-                        <h4>{teamName} {selectedLetters[tIdx]}</h4>
+                        <h4>
+                          {teamName === 'Other' 
+                            ? (otherTeams[tIdx] || 'Other') 
+                            : `${teamName} ${selectedLetters[tIdx]}`}
+                        </h4>
                         <div className="segment-list">
                           {SPLIT_NAMES.map((sName, sIdx) => {
-                            const time = splits[tIdx][sIdx]
+                            const time = splits[tIdx]?.[sIdx]
                             if (typeof time !== 'number') return null
 
-                            const prevTime = sIdx === 0 ? startBeepTime : splits[tIdx][sIdx - 1]
+                            // Search backwards for the nearest valid numerical split or start beep
+                            let prevTime: number | null = null
+                            if (sIdx === 0) {
+                              prevTime = startBeepTime
+                            } else {
+                              for (let i = sIdx - 1; i >= 0; i--) {
+                                if (typeof splits[tIdx]?.[i] === 'number') {
+                                  prevTime = splits[tIdx][i] as number
+                                  break
+                                }
+                              }
+                              if (prevTime === null) prevTime = startBeepTime
+                            }
                             if (typeof prevTime !== 'number') return null
 
                             const segment = time - prevTime
                             
-                            // Calculate leader for this split
-                            let minSegment = segment
+                            // Calculate cumulative leader for this split
+                            const cumul = time - (startBeepTime || 0)
+                            let minCumul = cumul
                             for (let i = 0; i < 3; i++) {
-                              const tTime = splits[i][sIdx]
-                              const tPrev = sIdx === 0 ? startBeepTime : splits[i][sIdx - 1]
-                              if (typeof tTime === 'number' && typeof tPrev === 'number') {
-                                const tSeg = tTime - tPrev
-                                if (tSeg < minSegment) minSegment = tSeg
+                              const tTime = splits[i]?.[sIdx]
+                              if (typeof tTime === 'number') {
+                                const tCumul = tTime - (startBeepTime || 0)
+                                if (tCumul < minCumul) minCumul = tCumul
                               }
                             }
-                            const diff = segment - minSegment
+                            const diff = cumul - minCumul
 
                             return (
                               <div key={sIdx} className="segment-row">

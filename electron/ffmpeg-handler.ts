@@ -60,7 +60,7 @@ export async function generateSplitOverlay(data: {
       if (time > maxTime) maxTime = time
     })
   })
-  const endTime = maxTime + 1.0
+  const endTime = maxTime + 4.0
   const duration = endTime - startBeepTime
 
   // 2.5 Calculate Event Times for Animations
@@ -155,11 +155,11 @@ export async function generateSplitOverlay(data: {
     }
   })
 
-  // Global Timer (formatted to 2 decimals)
+  // Global Timer (formatted to MM:SS.ms)
   filters.push({
     filter: 'drawtext',
     options: {
-      text: "'TIME\\: %{eif\\:t\\:d}.%{eif\\:t*100-trunc(t)*100\\:d\\:2}'",
+      text: "'TIME\\: %{eif\\:trunc(t/60)\\:d\\:2}\\:%{eif\\:trunc(t-trunc(t/60)*60)\\:d\\:2}.%{eif\\:t*100-trunc(t)*100\\:d\\:2}'",
       x: `main_w-${boxWidth + margin - 10}`,
       y: `main_h-${boxHeight + margin - 10}`,
       fontsize: 32,
@@ -272,19 +272,19 @@ export async function generateSplitOverlay(data: {
       .videoCodec('libx264')
       .audioCodec('aac')
       .output(outputPath)
-      .on('start', (cmd) => console.log('FFmpeg started:', cmd))
+      .on('start', (cmd: string) => console.log('FFmpeg started:', cmd))
       .on('end', () => {
         // Write the YouTube description to a file
         try {
           const desc = generateYouTubeDescription(data)
           fs.writeFileSync(descriptionPath, desc)
           console.log(`Wrote description to ${descriptionPath}`)
-        } catch (err) {
+        } catch (err: any) {
           console.error('Failed to write YouTube description:', err)
         }
         resolve(outputPath)
       })
-      .on('error', (err, stdout, stderr) => {
+      .on('error', (err: any, stdout: any, stderr: any) => {
         console.error('FFmpeg error:', err)
         console.error('FFmpeg stderr:', stderr)
         reject(err)
@@ -295,7 +295,26 @@ export async function generateSplitOverlay(data: {
 }
 
 export function generateYouTubeDescription(data: any) {
-  let desc = `CMU Buggy Race Splits - ${data.year || ''} ${data.category || ''} ${data.stage || ''}${data.isReroll ? ' (Reroll)' : ''}\n\n`
+  const teamNames = data.teams
+    .filter((t: any) => t && t.name)
+    .map((t: any) => `${t.name} ${t.letter}`.trim())
+    .join(' | ')
+
+  const stageFormatted = data.stage
+    ? (data.stage.toLowerCase().includes('prelim') ? 'prelim' : 'finals')
+    : ''
+
+  const suffix = [
+    data.year,
+    data.category ? data.category.toLowerCase() : '',
+    stageFormatted,
+    data.isReroll ? 'reroll' : ''
+  ].filter(Boolean).join(' ')
+
+  const title = `${teamNames} - ${suffix}`
+
+  let desc = `${title}\n\n`
+  desc += `CMU Buggy Race Splits - ${data.year || ''} ${data.category || ''} ${data.stage || ''}${data.isReroll ? ' (Reroll)' : ''}\n\n`
   
   data.teams.forEach((team: any) => {
     if (!team || !team.name) return
