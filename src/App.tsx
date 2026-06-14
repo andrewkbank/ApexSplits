@@ -55,8 +55,8 @@ function App() {
       if (category === 'All Gender') {
         setStage('Final')
       } else if (data) {
-        const currentCategory = category.toLowerCase().includes('men') ? 'mens' : 
-                               category.toLowerCase().includes('women') ? 'womens' : 'allgender'
+        const currentCategory = category.toLowerCase().includes('women') ? 'womens' : 
+                               category.toLowerCase().includes('men') ? 'mens' : 'allgender'
         const hasPrelims = data[currentCategory]?.some((r: any) => r.prelimTime)
         const hasFinals = data[currentCategory]?.some((r: any) => r.finalTime)
         
@@ -130,8 +130,8 @@ function App() {
         hasPrelims: scrapedData ? (scrapedData.mens?.some((r: any) => r.prelimTime) || scrapedData.womens?.some((r: any) => r.prelimTime)) : true,
         hasFinals: scrapedData ? (scrapedData.mens?.some((r: any) => r.finalTime) || scrapedData.womens?.some((r: any) => r.finalTime)) : true,
         teams: selectedTeams.map((t, i) => {
-          const currentCategory = category.toLowerCase().includes('men') ? 'mens' : 
-                                 category.toLowerCase().includes('women') ? 'womens' : 'allgender'
+          const currentCategory = category.toLowerCase().includes('women') ? 'womens' : 
+                                 category.toLowerCase().includes('men') ? 'mens' : 'allgender'
           const result = scrapedData?.[currentCategory]?.find((r: any) => r.team === t && r.letter === selectedLetters[i])
           
           let officialTime = ''
@@ -183,8 +183,8 @@ function App() {
         videoPath: videoSrc.replace('local-video://', ''),
         splits,
         teams: selectedTeams.map((t, i) => {
-          const currentCategory = category.toLowerCase().includes('men') ? 'mens' : 
-                                 category.toLowerCase().includes('women') ? 'womens' : 'allgender'
+          const currentCategory = category.toLowerCase().includes('women') ? 'womens' : 
+                                 category.toLowerCase().includes('men') ? 'mens' : 'allgender'
           const result = scrapedData?.[currentCategory]?.find((r: any) => r.team === t && r.letter === selectedLetters[i])
           
           let officialTime = ''
@@ -279,8 +279,8 @@ function App() {
                       </select>
                     </div>
                     {(category !== 'All Gender' && scrapedData) && (() => {
-                      const currentCategory = category.toLowerCase().includes('men') ? 'mens' : 
-                                             category.toLowerCase().includes('women') ? 'womens' : 'allgender'
+                      const currentCategory = category.toLowerCase().includes('women') ? 'womens' : 
+                                             category.toLowerCase().includes('men') ? 'mens' : 'allgender'
                       const categoryResults = scrapedData[currentCategory] || []
                       const hasPrelims = categoryResults.some((r: any) => r.prelimTime || r.prelimRerollTime)
                       const hasFinals = categoryResults.some((r: any) => r.finalTime || r.finalRerollTime)
@@ -313,8 +313,8 @@ function App() {
 
                   <div className="teams-row-stack">
                     {[0, 1, 2].map(i => {
-                      const currentCategory = category.toLowerCase().includes('men') ? 'mens' : 
-                                             category.toLowerCase().includes('women') ? 'womens' : 'allgender'
+                      const currentCategory = category.toLowerCase().includes('women') ? 'womens' : 
+                                             category.toLowerCase().includes('men') ? 'mens' : 'allgender'
                       
                       let categoryResults = scrapedData ? scrapedData[currentCategory] : []
                       
@@ -416,9 +416,9 @@ function App() {
                       src={videoSrc} 
                       onMarkSplit={handleMarkCurrent} 
                       onTimeUpdate={setVideoTime}
-                      nextExpectedTime={(EXPECTED_TIMES[category] || EXPECTED_TIMES['Men'])[
+                      nextExpectedTime={(EXPECTED_TIMES[category] || EXPECTED_TIMES['Men'] )[
                         SPLIT_NAMES.findIndex((_, i) => splits[0][i] === undefined)
-                      ]}
+                      ] || startBeepTime}
                     />
                   ) : (
                     <div className="video-placeholder">No video loaded</div>

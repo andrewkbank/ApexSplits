@@ -98,7 +98,7 @@ export async function scrapeRacedayResults(year: string) {
 export async function getTeamsForYear(year: string, category: string) {
   const results = await scrapeRacedayResults(year)
   if (!results) return []
-  const cat = category.toLowerCase().includes('men') ? 'mens' : 
-              category.toLowerCase().includes('women') ? 'womens' : 'allgender'
+  const cat = category.toLowerCase().includes('women') ? 'womens' : 
+              category.toLowerCase().includes('men') ? 'mens' : 'allgender'
   return results[cat].map((r: any) => r.fullName)
 }

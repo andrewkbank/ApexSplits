@@ -5,7 +5,7 @@ import fs from 'node:fs'
 
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 const TOKEN_PATH = path.join(app.getPath('userData'), 'token.json')
-const CREDENTIALS_PATH = path.join(process.cwd(), 'credentials.json')
+const CREDENTIALS_PATH = path.join(process.cwd(), 'google-credentials.json')
 
 export class SheetsService {
   private auth: any

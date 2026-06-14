@@ -138,8 +138,18 @@ export async function generateSplitOverlay(data: {
   // 3. Build FFmpeg Filters
   const filters: any[] = []
 
-  // Background Box for Overlay (Bottom Right)
-  const boxWidth = 380
+  // Calculate Dynamic Box Width based on longest team name
+  let maxTeamNameLength = 0
+  teams.forEach(team => {
+    if (!team.name) return
+    const teamName = `${team.name} ${team.letter}`.trim()
+    if (teamName.length > maxTeamNameLength) {
+      maxTeamNameLength = teamName.length
+    }
+  })
+  // FontSize is 24, average char width is ~13.5px. We add a minimum base of 290px for the splits data columns.
+  const estimatedTextWidth = maxTeamNameLength * 13.5
+  const boxWidth = Math.max(380, Math.ceil(290 + estimatedTextWidth + 15)) // 15px safety padding
   const boxHeight = 160
   const margin = 20
 
@@ -305,6 +315,7 @@ export function generateYouTubeDescription(data: any) {
     : ''
 
   const suffix = [
+    'CMU Buggy',
     data.year,
     data.category ? data.category.toLowerCase() : '',
     stageFormatted,
